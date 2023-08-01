@@ -1,0 +1,48 @@
+# code of Random Password Generator in Python
+import random
+import string
+
+def generate_random_password(length=12, use_uppercase=True, use_lowercase=True, use_digits=True, use_special_chars=True):
+    characters = ''
+    
+    if use_uppercase:
+        characters += string.ascii_uppercase
+    if use_lowercase:
+        characters += string.ascii_lowercase
+    if use_digits:
+        characters += string.digits
+    if use_special_chars:
+        characters += string.punctuation
+
+    if not characters:
+        raise ValueError("At least one character type (uppercase, lowercase, digits, or special characters) must be selected.")
+
+    password = ''.join(random.choice(characters) for _ in range(length))
+    return password
+
+def get_user_input(message, allowed_values=None):
+    while True:
+        user_input = input(message)
+        if allowed_values is None or user_input in allowed_values:
+            return user_input
+        else:
+            print("Invalid input. Please try again.")
+
+if __name__ == "__main__":
+    try:
+        num_passwords = int(get_user_input("Enter the number of passwords to generate: "))
+        password_length = int(get_user_input("Enter the desired password length: "))
+        use_uppercase = get_user_input("Include uppercase letters? (yes/no): ", allowed_values=['yes', 'no']) == 'yes'
+        use_lowercase = get_user_input("Include lowercase letters? (yes/no): ", allowed_values=['yes', 'no']) == 'yes'
+        use_digits = get_user_input("Include digits? (yes/no): ", allowed_values=['yes', 'no']) == 'yes'
+        use_special_chars = get_user_input("Include special characters? (yes/no): ", allowed_values=['yes', 'no']) == 'yes'
+
+        if password_length <= 0:
+            raise ValueError("Password length must be a positive integer.")
+        
+        for _ in range(num_passwords):
+            password = generate_random_password(password_length, use_uppercase, use_lowercase, use_digits, use_special_chars)
+            print("Generated password:", password)
+
+    except ValueError as e:
+        print("Error:", e)
